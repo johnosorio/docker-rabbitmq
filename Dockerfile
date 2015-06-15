@@ -4,6 +4,21 @@ FROM ubuntu:14.04
 RUN apt-get update && apt-get install -y rabbitmq-server
 RUN rabbitmq-plugins enable rabbitmq_management
 
+# Install.
+RUN \
+  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  apt-get update && \
+  apt-get -y upgrade && \
+  apt-get install -y build-essential && \
+  apt-get install -y software-properties-common && \
+  apt-get install -y byobu curl git htop man unzip vim wget && \
+  rm -rf /var/lib/apt/lists/*
+
+# Add files.
+ADD root/.bashrc /root/.bashrc
+ADD root/.gitconfig /root/.gitconfig
+ADD root/.scripts /root/.scripts
+
 # Add scripts
 RUN mkdir -p /opt/rabbitmq/bin/
 ADD scripts/start-rabbitmq-server.sh /opt/rabbitmq/bin/start-rabbitmq-server.sh
